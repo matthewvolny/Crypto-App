@@ -11,6 +11,7 @@ export default function Chart() {
   const { selectedCoinData } = useContext(Context);
   const [coinChartData, setCoinChartData] = useState();
   const isMounted = useRef(false);
+  const isMountedTwo = useRef(false);
 
   const {
     rank,
@@ -51,37 +52,47 @@ export default function Chart() {
         // console.log(data);
         const priceData = data.prices;
         const priceDataArray = [];
-        priceData.forEach((priceArray) => {
-          priceDataArray.push({
-            time: Math.floor(priceArray[0] / 1000),
-            // time: moment(priceArray[0]).format(momentFormat),
-            value: priceArray[1].toFixed(4),
+        if (duration === "365" || duration === "max") {
+          console.log("if");
+          priceData.forEach((priceArray) => {
+            priceDataArray.push({
+              time: moment(priceArray[0]).format("MM/DD/YYYY"),
+              value: priceArray[1].toFixed(4),
+            });
           });
-        });
+        } else {
+          console.log("else");
+          priceData.forEach((priceArray) => {
+            priceDataArray.push({
+              time: Math.floor(priceArray[0] / 1000),
+              value: priceArray[1].toFixed(4),
+            });
+          });
+        }
         const volumeData = data.total_volumes;
         const volumeDataArray = [];
-        volumeData.forEach((volumeArray) => {
-          volumeDataArray.push({
-            time: Math.floor(volumeArray[0] / 1000),
-            // time: moment(volumeArray[0]).format(momentFormat),
-            value: volumeArray[1].toFixed(4),
+        if (duration === "365" || duration === "max") {
+          volumeData.forEach((volumeArray) => {
+            volumeDataArray.push({
+              time: moment(volumeArray[0]).format("MM/DD/YYYY"),
+              value: volumeArray[1].toFixed(4),
+            });
           });
-        });
+        } else {
+          volumeData.forEach((volumeArray) => {
+            volumeDataArray.push({
+              time: Math.floor(volumeArray[0] / 1000),
+              value: volumeArray[1].toFixed(4),
+            });
+          });
+        }
         setCoinChartData({ prices: priceDataArray, volume: volumeDataArray });
       });
   };
 
   useEffect(() => {
     retrieveChartData("1" /*, "MM/DD/YYYY"*/);
-  }, []);
-
-  // useEffect(() => {
-  //   let chartElement = document.querySelector(".tv-lightweight-charts");
-  //   if (chartElement) {
-  //     console.log("here");
-  //     chartElement.setAttribute("id", "chartElement");
-  //   }
-  // });
+  }, [selectedCoinData]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -118,6 +129,8 @@ export default function Chart() {
         timeScale: {
           timeVisible: true,
           secondsVisible: false,
+          //apparently minbarspacing allows you to fit more data on small chart
+          // minBarSpacing: 0.001,
         },
         // borderColor: "green",
         // timeVisible: false,
@@ -125,7 +138,10 @@ export default function Chart() {
       });
       //fits timescale to the content
       // chart.timeScale().fitContent();
-
+      //
+      // chart
+      //   .timeScale()
+      //   .setVisibleLogicalRange({ from: 0, to: Date.now() / 1000 });
       const lineSeries = chart
         .addLineSeries
         //used to set y-axis scale (not quite sure exactly how it works)
@@ -154,6 +170,7 @@ export default function Chart() {
       //   // tickMarkType: "year";
       // };
       lineSeries.setData(coinChartData.prices);
+
       //   window.addEventListener("resize", handleResize);
 
       const volumeSeries = chart.addHistogramSeries({
@@ -174,6 +191,71 @@ export default function Chart() {
     }
   }, [coinChartData]);
 
+  // useEffect(() => {
+  //   if (isMountedTwo.current) {
+  //     const chart = createChart(document.querySelector(".chart"), {
+  //       width: 500,
+  //       height: 400,
+  //       rightPriceScale: {
+  //         visible: true,
+  //       },
+  //       grid: {
+  //         vertLines: {
+  //           visible: true,
+  //         },
+  //         horzLines: {
+  //           visible: true,
+  //         },
+  //       },
+  //       crosshair: {
+  //         vertLine: {
+  //           visible: true,
+  //         },
+  //         horzLine: {
+  //           visible: true,
+  //         },
+  //       },
+  //       layout: {
+  //         backgroundColor: "white",
+  //       },
+  //       timeScale: {
+  //         timeVisible: true,
+  //         secondsVisible: false,
+  //       },
+  //     });
+
+  //     const lineSeries = chart.addLineSeries();
+  //     lineSeries.applyOptions({
+  //       color: "red",
+  //       lineWidth: 4,
+  //       crosshairMarkerVisible: true,
+  //       lastValueVisible: true,
+  //       priceLineVisible: true,
+  //       visible: true,
+  //     });
+
+  //     lineSeries.update(coinChartData.prices);
+
+  //     const volumeSeries = chart.addHistogramSeries({
+  //       color: "#26a69a",
+  //       priceFormat: {
+  //         type: "volume",
+  //       },
+  //       priceScaleId: "",
+  //       scaleMargins: {
+  //         top: 0.8,
+  //         bottom: 0,
+  //       },
+  //     });
+  //     //volume series
+  //     volumeSeries.update(coinChartData.volume);
+  //   } else {
+  //     isMountedTwo.current = true;
+  //   }
+  // }, [coinChartData]);
+
+  //
+
   return (
     <>
       <div className="coin-details-flex">
@@ -191,7 +273,7 @@ export default function Chart() {
           <div
             value="day"
             onClick={() => {
-              retrieveChartData("1", "HH:mm:ss");
+              retrieveChartData("1");
             }}
           >
             Day
@@ -199,7 +281,7 @@ export default function Chart() {
           <div
             value="week"
             onClick={() => {
-              retrieveChartData("7", "MM/DD/YYYY");
+              retrieveChartData("7");
             }}
           >
             Week
@@ -207,7 +289,7 @@ export default function Chart() {
           <div
             value="month"
             onClick={() => {
-              retrieveChartData("30", "MM/DD/YYYY");
+              retrieveChartData("30");
             }}
           >
             Month
@@ -215,7 +297,7 @@ export default function Chart() {
           <div
             value="year"
             onClick={() => {
-              retrieveChartData("365", "MM/DD/YYYY");
+              retrieveChartData("365");
             }}
           >
             Year
@@ -223,7 +305,7 @@ export default function Chart() {
           <div
             value="all"
             onClick={() => {
-              retrieveChartData("max", "MM/DD/YYYY");
+              retrieveChartData("max");
             }}
           >
             All
