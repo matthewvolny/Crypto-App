@@ -1,0 +1,27 @@
+.coin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid orange;
+}
+.coin-row div {
+  display: inline-block;
+}
+
+.icon {
+  width: 30px;
+}
+
+svg {
+  width: 125px;
+}
+
+/* .sparkline-container {
+  width: 50px;
+  border: 1px solid grey;
+} */
+
+/* .chart {
+  display: inline-block;
+  border: 1px solid green;
+} */

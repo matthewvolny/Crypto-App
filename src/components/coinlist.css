@@ -1,0 +1,54 @@
+/* top flex box */
+.coinlist-controls {
+  background-color: antiquewhite;
+  width: 100%;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+}
+
+.search-form button {
+  margin-top: 0;
+}
+
+.sorting-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: tan 1px solid;
+}
+
+.sorting-buttons div {
+  padding: 0.6em 0.8em;
+  border: 1px solid rgb(227, 163, 227);
+  border-radius: 1em;
+  margin-top: 0;
+  /* transition: all; */
+}
+
+.sorting-buttons div:hover {
+  color: white;
+  background-color: rgb(227, 163, 227);
+}
+
+.coinlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid green;
+}
+
+.coinlist-header div + * {
+  margin-top: 0;
+}
+
+/* bottom flex box */
+.coinlist {
+  background-color: rgb(239, 254, 254);
+  width: 100%;
+  overflow: scroll;
+}
