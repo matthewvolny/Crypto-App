@@ -5,6 +5,7 @@ import axios from "axios";
 // import moment from "moment";
 // const moment = require("moment-timezone");
 import "./chart.css";
+import { utcToZonedTime } from "date-fns-tz";
 const moment = require("moment-timezone");
 
 // moment().format();
@@ -12,6 +13,7 @@ const moment = require("moment-timezone");
 export default function Chart() {
   const { selectedCoinData } = useContext(Context);
   const [coinChartData, setCoinChartData] = useState();
+  //!set viewfield duration back to 1
   const [viewFieldDuration, setViewFieldDuration] = useState("1");
   const [timeframeToFetch, setTimeframeToFetch] = useState("90");
   const isMounted = useRef(false);
@@ -57,40 +59,12 @@ export default function Chart() {
             });
           });
         } else {
-          console.log(`data in "hr" format`);
+          // console.log(`price in "hr" format`);
           priceData.forEach((priceArray) => {
-            // var d = new Date(priceArray[0]);
-            // var myTimezone = "EST";
-            // var myDatetimeFormat = "YYYY-MM-DD hh:mm:ss a z";
-            // var myDatetimeString = moment(d)
-            //   .tz(myTimezone)
-            //   .format(myDatetimeFormat);
-
-            // console.log(myDatetimeString);
-            // var unix = moment.tz(priceArray[0], "America/New_York").unix();
-
-            // const date = moment(priceArray[0]);
-            // const newYork = moment.tz(priceArray[0] / 1000, "America/New_York");
+            const unixDate = Math.floor(priceArray[0] / 1000);
+            const unixDateTZAdjusted = unixDate - 14400;
             priceDataArray.push({
-              //       const date = Math.floor(new Date().getTime() / 1000); //unix time stamp for the current date/time
-              // console.log(`date: ${date}`);
-              // // const yesterday = date - 86400;
-              // // console.log(`yesterday: ${yesterday}`);
-              // const date2 = Date.now() / 1000;
-              // console.log(date2);
-              // const str = new Date().toLocaleString("en-US", {
-              //   timeZone: "EST",
-              // });
-              // console.log(str);
-              // const newDate = date2.toLocaleString("en-US", {
-              //   timeZone: "EST",
-              // });
-
-              // time: Math.floor(priceArray[0] / 1000).toLocaleString("en-US", {
-              //   timeZone: "America/New_York",
-              // }),
-
-              time: Math.floor(priceArray[0] / 1000),
+              time: unixDateTZAdjusted,
               value: priceArray[1].toFixed(4),
             });
           });
@@ -106,9 +80,12 @@ export default function Chart() {
             });
           });
         } else {
+          // console.log(`volume in "hr" format`);
           volumeData.forEach((volumeArray) => {
+            const unixDate = Math.floor(volumeArray[0] / 1000);
+            const unixDateTZAdjusted = unixDate - 14400;
             volumeDataArray.push({
-              time: Math.floor(volumeArray[0] / 1000),
+              time: unixDateTZAdjusted,
               value: volumeArray[1].toFixed(4),
             });
           });
@@ -118,10 +95,26 @@ export default function Chart() {
   };
 
   //(1)calls function making API request for chart data, when  component rendered, coin selected, or "timeframe" for particular coin is changed (with button click)
+
+  //const isMounted = useRef(false);
+
+  //  if (isMounted.current) {
+  //     if (document.querySelector(".tv-lightweight-charts")) {
+  //       updateChartData(coinChartData);
+  //     } else {
+  //       renderChart(coinChartData);
+  //     }
+  //   } else {
+  //     isMounted.current = true;
+  //   }
+
+  const prevTimeFrameToFetchRef = useRef("90");
   useEffect(() => {
+    console.log("number 1");
+    prevTimeFrameToFetchRef.current = timeframeToFetch;
     //!can limit redundant calls here(i.e. repeated 30day calls)
     retrieveChartData(timeframeToFetch);
-  }, [selectedCoinData, timeframeToFetch]);
+  }, [selectedCoinData]);
 
   //(4a)renders the chart
   const renderChart = (coinChartData) => {
@@ -154,6 +147,22 @@ export default function Chart() {
         timeVisible: true,
         secondsVisible: true,
       },
+      // localization: {
+      //   timeFormatter: (businessDayOrTimestamp) => {
+      //     if (chart.isBusinessDay(businessDayOrTimestamp)) {
+      //       return (
+      //         "bd=" +
+      //         businessDayOrTimestamp.day +
+      //         "-" +
+      //         businessDayOrTimestamp.month +
+      //         "-" +
+      //         businessDayOrTimestamp.year
+      //       );
+      //     }
+
+      //     return "ts=" + businessDayOrTimestamp;
+      //   },
+      // },
     });
     const lineSeries = chart.addLineSeries();
     lineSeries.applyOptions({
@@ -177,51 +186,43 @@ export default function Chart() {
       },
     });
     volumeSeries.setData(coinChartData.volume);
+    //global variables used to update the chart
     globalChart = chart;
     globalLineSeries = lineSeries;
     globalVolumeSeries = volumeSeries;
     // //!show values back to a given date
-    //viewFieldDuration
-
+    const todaysDate = new Date();
+    const todaysDateUnixTime = new Date(todaysDate).getTime() / 1000;
+    // const todaysFormattedUnixDate = Math.floor(todaysDate / 1000);
     switch (viewFieldDuration) {
       case "1":
-        // const date = Math.floor(new Date().getTime() / 1000); //unix time stamp for the current date/time
-        // console.log(`date: ${date}`);
-        // const yesterday = date - 86400;
-        // console.log(`yesterday: ${yesterday}`);
-        console.log("moment seq");
-        const date2 = Date.now() / 1000; //unix time
-        console.log(date2);
-
-        console.log(moment.tz.zone("America/New_York").utcOffset(date2));
-
-        const newDate2 = moment.tz(date2, "America/New_York");
-        console.log(newDate2.format());
-
-        const date3 = new Date(date2);
-        console.log(moment.tz(date3, "America/New_York").format());
-        console.log(moment.unix(date2));
-        //!is this correct? I think it is
-        console.log(moment.tz(moment.unix(date2), "America/New_York").format());
-
-        // const str = new Date().toLocaleString("en-US", {
-        //   timeZone: "EST",
-        // });
-        // console.log(str);
-        // const newDate = date2.toLocaleString("en-US", {
-        //   timeZone: "EST",
-        // });
+        console.log("case 1");
+        const twentyFourHoursPriorDate = todaysDateUnixTime - 86400;
+        //!alternatively can show beginning of actual day (though this is more relevant for stocks, not crypto)
+        // todaysDate.setUTCHours(0, 0, 0, 0);
+        // const beginningOfDay = todaysDate.toUTCString();
+        // const beginningOfDayUnixTime =
+        //   new Date(beginningOfDay).getTime() / 1000;
         chart.timeScale().setVisibleRange({
-          from: "2022-03-12",
-          // from: yesterday.setDate(date.getDate() - 1),
-          to: date2,
-          //! new Date().toLocaleDateString(),
-          // new Date().toISOString().slice(0, 10),
-          //or this // to: Date.now() / 1000;
+          from: twentyFourHoursPriorDate,
+          to: todaysDateUnixTime,
         });
         break;
       case "7":
-        // code block
+        console.log("case 7");
+        const sevenDaysPriorDate = todaysDateUnixTime - 604800;
+        chart.timeScale().setVisibleRange({
+          from: sevenDaysPriorDate,
+          to: todaysDateUnixTime,
+        });
+        break;
+      case "30":
+        console.log("case 30");
+        const oneMonthPriorDate = todaysDateUnixTime - 2592000;
+        chart.timeScale().setVisibleRange({
+          from: oneMonthPriorDate,
+          to: todaysDateUnixTime,
+        });
         break;
       default:
       // code block
@@ -230,6 +231,7 @@ export default function Chart() {
 
   //(4b)change chart data(two methods)
   const updateChartData = (newData) => {
+    console.log("updateChart");
     //!two approaches to replacing data in chart
     //!(1)-delete chart
     const previousChart = document.querySelector(".tv-lightweight-charts");
@@ -275,8 +277,11 @@ export default function Chart() {
     } else {
       isMounted.current = true;
     }
-  }, [coinChartData]);
+  }, [coinChartData, viewFieldDuration]);
 
+  // useEffect(() => {
+  //   console.log("timeframe changed");
+  // }, [timeframeToFetch]);
   return (
     <>
       <div className="coin-details-flex">
