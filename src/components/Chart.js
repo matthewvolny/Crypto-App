@@ -18,6 +18,7 @@ export default function Chart() {
   const [timeframeToFetch, setTimeframeToFetch] = useState("90");
   const isMounted = useRef(false);
   const isMountedTwo = useRef(false);
+  const prevTimeFrameToFetchRef = useRef("90");
 
   //global variables
   const {
@@ -73,6 +74,7 @@ export default function Chart() {
         const volumeData = data.total_volumes;
         const volumeDataArray = [];
         if (/*duration === "365" ||*/ duration === "max") {
+          console.log(`data in "day" format`);
           volumeData.forEach((volumeArray) => {
             volumeDataArray.push({
               time: moment(volumeArray[0]).format("MM/DD/YYYY"),
@@ -108,7 +110,6 @@ export default function Chart() {
   //     isMounted.current = true;
   //   }
 
-  const prevTimeFrameToFetchRef = useRef("90");
   useEffect(() => {
     console.log("number 1");
     prevTimeFrameToFetchRef.current = timeframeToFetch;
@@ -186,10 +187,7 @@ export default function Chart() {
       },
     });
     volumeSeries.setData(coinChartData.volume);
-    //global variables used to update the chart
-    globalChart = chart;
-    globalLineSeries = lineSeries;
-    globalVolumeSeries = volumeSeries;
+
     // //!show values back to a given date
     const todaysDate = new Date();
     const todaysDateUnixTime = new Date(todaysDate).getTime() / 1000;
@@ -224,13 +222,30 @@ export default function Chart() {
           to: todaysDateUnixTime,
         });
         break;
+      case "365":
+        console.log("case 365");
+        const oneYearPriorDate = todaysDateUnixTime - 3.154e7;
+        chart.timeScale().setVisibleRange({
+          from: oneYearPriorDate,
+          to: todaysDateUnixTime,
+        });
+        break;
+      case "max":
+        console.log("case max");
+        chart.timeScale().fitContent();
+        break;
       default:
       // code block
     }
+    //global variables used to update the chart (not currently being used)
+    globalChart = chart;
+    globalLineSeries = lineSeries;
+    globalVolumeSeries = volumeSeries;
   };
 
   //(4b)change chart data(two methods)
   const updateChartData = (newData) => {
+    console.log(newData);
     console.log("updateChart");
     //!two approaches to replacing data in chart
     //!(1)-delete chart
@@ -266,11 +281,19 @@ export default function Chart() {
     // });
   };
 
-  //(3)renders a new chart or updates the current chart with new data
+  //(3)renders a new chart or updates the current chart with new data (* this is (1) if chart is already rendered, as it updates chart on button click)
   useEffect(() => {
     if (isMounted.current) {
       if (document.querySelector(".tv-lightweight-charts")) {
-        updateChartData(coinChartData);
+        //!if user has clicked a different timeframe to fetch (i.e. 1year, or max)
+        if (prevTimeFrameToFetchRef.current !== timeframeToFetch) {
+          retrieveChartData(timeframeToFetch); //!creates an infinite loop
+          prevTimeFrameToFetchRef.current = timeframeToFetch;
+        } else {
+          console.log("updateChartData");
+          //deletes the chart before rendering
+          updateChartData(coinChartData);
+        }
       } else {
         renderChart(coinChartData);
       }
@@ -279,9 +302,6 @@ export default function Chart() {
     }
   }, [coinChartData, viewFieldDuration]);
 
-  // useEffect(() => {
-  //   console.log("timeframe changed");
-  // }, [timeframeToFetch]);
   return (
     <>
       <div className="coin-details-flex">
@@ -335,7 +355,7 @@ export default function Chart() {
           <div
             value="all"
             onClick={() => {
-              setTimeframeToFetch("max");
+              setViewFieldDuration("max");
               setTimeframeToFetch("max");
             }}
           >
