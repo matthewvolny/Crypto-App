@@ -2,14 +2,18 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import Context from "../context/context";
 import { createChart } from "lightweight-charts";
 import axios from "axios";
-import moment from "moment";
+// import moment from "moment";
+// const moment = require("moment-timezone");
 import "./chart.css";
-moment().format();
+const moment = require("moment-timezone");
+
+// moment().format();
 
 export default function Chart() {
   const { selectedCoinData } = useContext(Context);
   const [coinChartData, setCoinChartData] = useState();
-  const [timeframeToFetch, setTimeframeToFetch] = useState("1");
+  const [viewFieldDuration, setViewFieldDuration] = useState("1");
+  const [timeframeToFetch, setTimeframeToFetch] = useState("90");
   const isMounted = useRef(false);
   const isMountedTwo = useRef(false);
 
@@ -55,7 +59,37 @@ export default function Chart() {
         } else {
           console.log(`data in "hr" format`);
           priceData.forEach((priceArray) => {
+            // var d = new Date(priceArray[0]);
+            // var myTimezone = "EST";
+            // var myDatetimeFormat = "YYYY-MM-DD hh:mm:ss a z";
+            // var myDatetimeString = moment(d)
+            //   .tz(myTimezone)
+            //   .format(myDatetimeFormat);
+
+            // console.log(myDatetimeString);
+            // var unix = moment.tz(priceArray[0], "America/New_York").unix();
+
+            // const date = moment(priceArray[0]);
+            // const newYork = moment.tz(priceArray[0] / 1000, "America/New_York");
             priceDataArray.push({
+              //       const date = Math.floor(new Date().getTime() / 1000); //unix time stamp for the current date/time
+              // console.log(`date: ${date}`);
+              // // const yesterday = date - 86400;
+              // // console.log(`yesterday: ${yesterday}`);
+              // const date2 = Date.now() / 1000;
+              // console.log(date2);
+              // const str = new Date().toLocaleString("en-US", {
+              //   timeZone: "EST",
+              // });
+              // console.log(str);
+              // const newDate = date2.toLocaleString("en-US", {
+              //   timeZone: "EST",
+              // });
+
+              // time: Math.floor(priceArray[0] / 1000).toLocaleString("en-US", {
+              //   timeZone: "America/New_York",
+              // }),
+
               time: Math.floor(priceArray[0] / 1000),
               value: priceArray[1].toFixed(4),
             });
@@ -89,7 +123,7 @@ export default function Chart() {
     retrieveChartData(timeframeToFetch);
   }, [selectedCoinData, timeframeToFetch]);
 
-  //(4)renders the chart
+  //(4a)renders the chart
   const renderChart = (coinChartData) => {
     const chart = createChart(document.querySelector(".chart"), {
       width: 500,
@@ -118,7 +152,7 @@ export default function Chart() {
       },
       timeScale: {
         timeVisible: true,
-        secondsVisible: false,
+        secondsVisible: true,
       },
     });
     const lineSeries = chart.addLineSeries();
@@ -146,9 +180,55 @@ export default function Chart() {
     globalChart = chart;
     globalLineSeries = lineSeries;
     globalVolumeSeries = volumeSeries;
+    // //!show values back to a given date
+    //viewFieldDuration
+
+    switch (viewFieldDuration) {
+      case "1":
+        // const date = Math.floor(new Date().getTime() / 1000); //unix time stamp for the current date/time
+        // console.log(`date: ${date}`);
+        // const yesterday = date - 86400;
+        // console.log(`yesterday: ${yesterday}`);
+        console.log("moment seq");
+        const date2 = Date.now() / 1000; //unix time
+        console.log(date2);
+
+        console.log(moment.tz.zone("America/New_York").utcOffset(date2));
+
+        const newDate2 = moment.tz(date2, "America/New_York");
+        console.log(newDate2.format());
+
+        const date3 = new Date(date2);
+        console.log(moment.tz(date3, "America/New_York").format());
+        console.log(moment.unix(date2));
+        //!is this correct? I think it is
+        console.log(moment.tz(moment.unix(date2), "America/New_York").format());
+
+        // const str = new Date().toLocaleString("en-US", {
+        //   timeZone: "EST",
+        // });
+        // console.log(str);
+        // const newDate = date2.toLocaleString("en-US", {
+        //   timeZone: "EST",
+        // });
+        chart.timeScale().setVisibleRange({
+          from: "2022-03-12",
+          // from: yesterday.setDate(date.getDate() - 1),
+          to: date2,
+          //! new Date().toLocaleDateString(),
+          // new Date().toISOString().slice(0, 10),
+          //or this // to: Date.now() / 1000;
+        });
+        break;
+      case "7":
+        // code block
+        break;
+      default:
+      // code block
+    }
   };
 
-  //change chart data(two methods)
+  //(4b)change chart data(two methods)
   const updateChartData = (newData) => {
     //!two approaches to replacing data in chart
     //!(1)-delete chart
@@ -214,7 +294,8 @@ export default function Chart() {
           <div
             value="day"
             onClick={() => {
-              setTimeframeToFetch("30");
+              setViewFieldDuration("1");
+              setTimeframeToFetch("90");
             }}
           >
             Day
@@ -222,7 +303,8 @@ export default function Chart() {
           <div
             value="week"
             onClick={() => {
-              setTimeframeToFetch("30");
+              setViewFieldDuration("7");
+              setTimeframeToFetch("90");
             }}
           >
             Week
@@ -230,7 +312,8 @@ export default function Chart() {
           <div
             value="month"
             onClick={() => {
-              setTimeframeToFetch("30");
+              setViewFieldDuration("30");
+              setTimeframeToFetch("90");
             }}
           >
             Month
@@ -238,6 +321,7 @@ export default function Chart() {
           <div
             value="year"
             onClick={() => {
+              setViewFieldDuration("365");
               setTimeframeToFetch("max");
             }}
           >
@@ -246,6 +330,7 @@ export default function Chart() {
           <div
             value="all"
             onClick={() => {
+              setTimeframeToFetch("max");
               setTimeframeToFetch("max");
             }}
           >
