@@ -2,13 +2,10 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import Context from "../context/context";
 import { createChart } from "lightweight-charts";
 import axios from "axios";
-// import moment from "moment";
+import moment from "moment";
 // const moment = require("moment-timezone");
 import "./chart.css";
-import { utcToZonedTime } from "date-fns-tz";
-const moment = require("moment-timezone");
-
-// moment().format();
+moment().format();
 
 export default function Chart() {
   const { selectedCoinData } = useContext(Context);
@@ -47,7 +44,8 @@ export default function Chart() {
       )
       .then((response) => {
         const data = response.data;
-        // console.log(data);
+        console.log("fetched data");
+        console.log(data);
         //formats "price" data based on whether it is in "days" or "hrs"
         const priceData = data.prices;
         const priceDataArray = [];
@@ -119,6 +117,7 @@ export default function Chart() {
 
   //(4a)renders the chart
   const renderChart = (coinChartData) => {
+    console.log(coinChartData);
     const chart = createChart(document.querySelector(".chart"), {
       width: 500,
       height: 400,
@@ -174,7 +173,9 @@ export default function Chart() {
       priceLineVisible: true,
       visible: true,
     });
+    // console.log(coinChartData.prices);
     lineSeries.setData(coinChartData.prices);
+
     const volumeSeries = chart.addHistogramSeries({
       color: "#26a69a",
       priceFormat: {
@@ -186,6 +187,7 @@ export default function Chart() {
         bottom: 0,
       },
     });
+    // console.log(coinChartData.volume);
     volumeSeries.setData(coinChartData.volume);
 
     // //!show values back to a given date
@@ -224,6 +226,7 @@ export default function Chart() {
         break;
       case "365":
         console.log("case 365");
+        // debugger;
         const oneYearPriorDate = todaysDateUnixTime - 3.154e7;
         chart.timeScale().setVisibleRange({
           from: oneYearPriorDate,
@@ -245,8 +248,8 @@ export default function Chart() {
 
   //(4b)change chart data(two methods)
   const updateChartData = (newData) => {
-    console.log(newData);
     console.log("updateChart");
+    console.log(newData);
     //!two approaches to replacing data in chart
     //!(1)-delete chart
     const previousChart = document.querySelector(".tv-lightweight-charts");
@@ -287,7 +290,7 @@ export default function Chart() {
       if (document.querySelector(".tv-lightweight-charts")) {
         //!if user has clicked a different timeframe to fetch (i.e. 1year, or max)
         if (prevTimeFrameToFetchRef.current !== timeframeToFetch) {
-          retrieveChartData(timeframeToFetch); //!creates an infinite loop
+          retrieveChartData(timeframeToFetch);
           prevTimeFrameToFetchRef.current = timeframeToFetch;
         } else {
           console.log("updateChartData");

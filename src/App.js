@@ -105,7 +105,8 @@ function App() {
         //get single coin price
         // "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
         //!key endpoint, lists all coins by market cap with change for various periods of time, also shows sparklines for 7 days (axis-less data for graph)
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h%2C7d"
+        //
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=24h%2C7d"
         //!has converted prices for coins
         //  'https://api.coingecko.com/api/v3/coins/bitcoin/tickers'
         //!has description of the coin
@@ -113,7 +114,7 @@ function App() {
         //!historical price data (for max duration) for a particular coin
         //"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=max"
         //list all coins (tens of thousands)
-        // "https://api.coingecko.com/api/v3/coins/list"
+        //"https://api.coingecko.com/api/v3/coins/list"
         //get market cap for a smattering of coins (not sure if all)
         // "https://api.coingecko.com/api/v3/global"
         //have a search bar for individual coins (could show only if it in the list of coins I am displaying), has market cap rank and images links
@@ -146,6 +147,36 @@ function App() {
         setCoinData(coinDataArray);
       });
   }, []);
+
+  //get ids for all coins listed and adds them to "coinData" (an array stored in state)
+  const getIdsAfterPageLoad = async () => {
+    await axios
+      .get(
+        //list all coins (tens of thousands)
+        "https://api.coingecko.com/api/v3/coins/list"
+      )
+      .then((response) => {
+        const allCoinsIdArray = response.data;
+        // console.log(allCoinsIdArray);
+        // console.log(coinData);
+        const coinDataCopy = coinData;
+        for (let i = 0; i < coinDataCopy.length; i++) {
+          for (let j = 0; j < allCoinsIdArray.length; j++) {
+            if (coinDataCopy[i].name === allCoinsIdArray[j].name) {
+              coinDataCopy[i].id = allCoinsIdArray[j].id;
+            }
+          }
+        }
+        console.log(coinDataCopy);
+        //!creates an infinite loop
+        //setCoinData(coinDataCopy);//!currently creates an infinite loop
+      });
+  };
+
+  //get "correct" ids for all coins listed
+  useEffect(() => {
+    getIdsAfterPageLoad();
+  }, [coinData]);
 
   return (
     <Context.Provider
