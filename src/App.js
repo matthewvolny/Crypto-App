@@ -168,7 +168,7 @@ function App() {
             }
           }
         }
-        console.log(coinDataCopy);
+        // console.log(coinDataCopy);
         //!creates an infinite loop
         //setCoinData(coinDataCopy);//!currently creates an infinite loop
       });

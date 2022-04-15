@@ -24,11 +24,10 @@ export default function ChartControls(props) {
     props.setTimeFrameToFetch(timeFrameValue);
     //
     if (!actionClicked) {
-      console.log(e.target.value);
       e.target.setAttribute("id", "clicked");
       setActionClicked(e.target.className);
     } else {
-      console.log(buttonDOMObject[actionClicked]);
+      //   console.log(buttonDOMObject[actionClicked]);
       buttonDOMObject[actionClicked].removeAttribute("id");
       e.target.setAttribute("id", "clicked");
       setActionClicked(e.target.className);
@@ -69,7 +68,7 @@ export default function ChartControls(props) {
       <div
         className="year"
         value="year"
-        onClick={(e) => handleClick("365", "max", e)}
+        onClick={(e) => handleClick("365", "1095", e)}
       >
         Year
       </div>

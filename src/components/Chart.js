@@ -16,6 +16,7 @@ export default function Chart() {
   const isMounted = useRef(false);
   const isMountedTwo = useRef(false);
   const prevTimeFrameToFetchRef = useRef("90");
+  const prevViewFieldDurationRef = useRef();
 
   //global variables
   const {
@@ -52,26 +53,24 @@ export default function Chart() {
         const priceDataArray = [];
         if (duration === "max") {
           //if viewfield set to "max"
-          if (viewFieldDuration === "max") {
-            console.log(`data in "week" format`);
-            for (let i = priceData.length - 1; i >= 0; i--) {
-              if (i % 7 === 0) {
-                priceDataArray.unshift({
-                  time: moment(priceData[i][0]).format("MM/DD/YYYY"),
-                  value: priceData[i][1].toFixed(4),
-                });
-              }
-            }
-          } else {
-            //if viewfield set to "365"
-            console.log(`data in "day" format`);
-            priceData.forEach((priceArray) => {
-              priceDataArray.push({
-                time: moment(priceArray[0]).format("MM/DD/YYYY"),
-                value: priceArray[1].toFixed(4),
+          console.log(`data in "week" format`);
+          for (let i = priceData.length - 1; i >= 0; i--) {
+            if (i % 7 === 0) {
+              priceDataArray.unshift({
+                time: moment(priceData[i][0]).format("MM/DD/YYYY"),
+                value: priceData[i][1].toFixed(4),
               });
-            });
+            }
           }
+        } else if (duration === "1095") {
+          //if viewfield set to "365"
+          console.log(`data in "day" format`);
+          priceData.forEach((priceArray) => {
+            priceDataArray.push({
+              time: moment(priceArray[0]).format("MM/DD/YYYY"),
+              value: priceArray[1].toFixed(4),
+            });
+          });
         } else {
           // console.log(`price in "hr" format`);
           priceData.forEach((priceArray) => {
@@ -88,27 +87,24 @@ export default function Chart() {
         const volumeDataArray = [];
         if (duration === "max") {
           //if viewfield set to "max"
-          if (viewFieldDuration === "max") {
-            console.log(`data in "week" format`);
-            for (let i = volumeData.length - 1; i >= 0; i--) {
-              if (i % 7 === 0) {
-                volumeDataArray.unshift({
-                  time: moment(volumeData[i][0]).format("MM/DD/YYYY"),
-                  value: volumeData[i][1].toFixed(4),
-                });
-              }
-            }
-          } else {
-            //if viewfield set to "365"
-            console.log(`data in "day" format`);
-            volumeData.forEach((volumeArray) => {
-              volumeDataArray.push({
-                time: moment(volumeArray[0]).format("MM/DD/YYYY"),
-                value: volumeArray[1].toFixed(4),
+          console.log(`data in "week" format`);
+          for (let i = volumeData.length - 1; i >= 0; i--) {
+            if (i % 7 === 0) {
+              volumeDataArray.unshift({
+                time: moment(volumeData[i][0]).format("MM/DD/YYYY"),
+                value: volumeData[i][1].toFixed(4),
               });
-            });
+            }
           }
-          //
+        } else if (duration === "1095") {
+          //if viewfield set to "365"
+          console.log(`data in "day" format`);
+          volumeData.forEach((volumeArray) => {
+            volumeDataArray.push({
+              time: moment(volumeArray[0]).format("MM/DD/YYYY"),
+              value: volumeArray[1].toFixed(4),
+            });
+          });
         } else {
           // console.log(`volume in "hr" format`);
           volumeData.forEach((volumeArray) => {
@@ -263,6 +259,14 @@ export default function Chart() {
           to: todaysDateUnixTime,
         });
         break;
+      case "1095":
+        console.log("case 1095");
+        const threeYearsPriorDate = todaysDateUnixTime - 9.467e7;
+        chart.timeScale().setVisibleRange({
+          from: threeYearsPriorDate,
+          to: todaysDateUnixTime,
+        });
+        break;
       case "max":
         console.log("case max");
         chart.timeScale().fitContent();
@@ -318,12 +322,14 @@ export default function Chart() {
   useEffect(() => {
     if (isMounted.current) {
       if (document.querySelector(".tv-lightweight-charts")) {
-        //!if user has clicked a different timeframe to fetch (i.e. 1year, or max)
+        //!if user has clicked a different timeframe to fetch (i.e. from 90 days to max)
         if (prevTimeFrameToFetchRef.current !== timeFrameToFetch) {
+          console.log("retrieve chart data - new timeframe");
           retrieveChartData(timeFrameToFetch);
           prevTimeFrameToFetchRef.current = timeFrameToFetch;
         } else {
-          console.log("updateChartData");
+          console.log("updateChartData - same timeframe");
+          //! issue is here, when you click 365 before all it is the same timeframe and cannot add weekly data to state
           //deletes the chart before rendering
           updateChartData(coinChartData);
         }
