@@ -45,6 +45,7 @@ export default function CoinRow(props) {
         key={rank}
         onClick={() => {
           setSelectedCoinData(props.coin);
+          // setActionClicked("day");
           // retrieveDetailedChartData(name);
         }}
       >

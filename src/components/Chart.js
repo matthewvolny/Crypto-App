@@ -14,9 +14,9 @@ export default function Chart() {
   const [viewFieldDuration, setViewFieldDuration] = useState("1");
   const [timeFrameToFetch, setTimeFrameToFetch] = useState("90");
   const isMounted = useRef(false);
-  const isMountedTwo = useRef(false);
+  //const isMountedTwo = useRef(false);
   const prevTimeFrameToFetchRef = useRef("90");
-  const prevViewFieldDurationRef = useRef();
+  //const prevViewFieldDurationRef = useRef();
 
   //global variables
   const {

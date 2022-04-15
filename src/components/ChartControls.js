@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
+// import Context from "../context/context";
 import "./chartControls.css";
 
 export default function ChartControls(props) {
   const [actionClicked, setActionClicked] = useState();
+  //const { actionClicked, setActionClicked } = useContext(Context);
 
   const dayButton = document.querySelector(".day");
   const weekButton = document.querySelector(".week");
@@ -24,6 +26,7 @@ export default function ChartControls(props) {
     props.setTimeFrameToFetch(timeFrameValue);
     //
     if (!actionClicked) {
+      buttonDOMObject["day"].removeAttribute("id");
       e.target.setAttribute("id", "clicked");
       setActionClicked(e.target.className);
     } else {
@@ -47,6 +50,7 @@ export default function ChartControls(props) {
       <div
         className="day"
         value="day"
+        id="clicked"
         onClick={(e) => handleClick("1", "90", e)}
       >
         Day

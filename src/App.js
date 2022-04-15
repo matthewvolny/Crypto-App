@@ -13,6 +13,7 @@ function App() {
   const [coinData, setCoinData] = useState();
   const [selectedCoinData, setSelectedCoinData] = useState();
   const [coinChartData, setCoinChartData] = useState();
+  const [actionClicked, setActionClicked] = useState();
 
   useEffect(() => {
     if (lastPrice <= ethereumPrice) {
@@ -184,6 +185,8 @@ function App() {
       value={{
         selectedCoinData,
         setSelectedCoinData,
+        // actionClicked,
+        // setActionClicked,
         // coinChartData,
         // setCoinChartData,
       }}
