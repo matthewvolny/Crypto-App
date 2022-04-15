@@ -159,6 +159,7 @@ function App() {
         const allCoinsIdArray = response.data;
         // console.log(allCoinsIdArray);
         // console.log(coinData);
+        //!updating state by setting "equal", not by creating a copy and pushing
         const coinDataCopy = coinData;
         for (let i = 0; i < coinDataCopy.length; i++) {
           for (let j = 0; j < allCoinsIdArray.length; j++) {

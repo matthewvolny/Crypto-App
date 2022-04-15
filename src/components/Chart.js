@@ -3,7 +3,6 @@ import Context from "../context/context";
 import { createChart } from "lightweight-charts";
 import axios from "axios";
 import moment from "moment";
-// const moment = require("moment-timezone");
 import "./chart.css";
 moment().format();
 
@@ -19,6 +18,7 @@ export default function Chart() {
 
   //global variables
   const {
+    id,
     rank,
     image,
     name,
@@ -30,14 +30,14 @@ export default function Chart() {
     volume24hr,
   } = selectedCoinData;
 
-  const coinName = selectedCoinData.name;
+  const coinId = selectedCoinData.id;
   let globalChart;
   let globalLineSeries;
   let globalVolumeSeries;
 
   //(2)retrieves price/volume data for for varying periods of time
   const retrieveChartData = (duration) => {
-    const coinLowercase = coinName.charAt(0).toLowerCase() + coinName.slice(1);
+    const coinLowercase = coinId.charAt(0).toLowerCase() + coinId.slice(1);
     axios
       .get(
         `https://api.coingecko.com/api/v3/coins/${coinLowercase}/market_chart?vs_currency=usd&days=${duration}`
