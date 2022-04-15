@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
+import ChartControls from "./ChartControls";
 import Context from "../context/context";
 import { createChart } from "lightweight-charts";
 import axios from "axios";
@@ -11,7 +12,7 @@ export default function Chart() {
   const [coinChartData, setCoinChartData] = useState();
   //!set viewfield duration back to 1
   const [viewFieldDuration, setViewFieldDuration] = useState("1");
-  const [timeframeToFetch, setTimeframeToFetch] = useState("90");
+  const [timeFrameToFetch, setTimeFrameToFetch] = useState("90");
   const isMounted = useRef(false);
   const isMountedTwo = useRef(false);
   const prevTimeFrameToFetchRef = useRef("90");
@@ -110,9 +111,9 @@ export default function Chart() {
 
   useEffect(() => {
     console.log("number 1");
-    prevTimeFrameToFetchRef.current = timeframeToFetch;
+    prevTimeFrameToFetchRef.current = timeFrameToFetch;
     //!can limit redundant calls here(i.e. repeated 30day calls)
-    retrieveChartData(timeframeToFetch);
+    retrieveChartData(timeFrameToFetch);
   }, [selectedCoinData]);
 
   //(4a)renders the chart
@@ -289,9 +290,9 @@ export default function Chart() {
     if (isMounted.current) {
       if (document.querySelector(".tv-lightweight-charts")) {
         //!if user has clicked a different timeframe to fetch (i.e. 1year, or max)
-        if (prevTimeFrameToFetchRef.current !== timeframeToFetch) {
-          retrieveChartData(timeframeToFetch);
-          prevTimeFrameToFetchRef.current = timeframeToFetch;
+        if (prevTimeFrameToFetchRef.current !== timeFrameToFetch) {
+          retrieveChartData(timeFrameToFetch);
+          prevTimeFrameToFetchRef.current = timeFrameToFetch;
         } else {
           console.log("updateChartData");
           //deletes the chart before rendering
@@ -318,53 +319,10 @@ export default function Chart() {
         <div>{volume24hr}</div>
       </div>
       <div className="chart-with-controls-container">
-        <div className="chart-controls">
-          <div
-            value="day"
-            onClick={() => {
-              setViewFieldDuration("1");
-              setTimeframeToFetch("90");
-            }}
-          >
-            Day
-          </div>
-          <div
-            value="week"
-            onClick={() => {
-              setViewFieldDuration("7");
-              setTimeframeToFetch("90");
-            }}
-          >
-            Week
-          </div>
-          <div
-            value="month"
-            onClick={() => {
-              setViewFieldDuration("30");
-              setTimeframeToFetch("90");
-            }}
-          >
-            Month
-          </div>
-          <div
-            value="year"
-            onClick={() => {
-              setViewFieldDuration("365");
-              setTimeframeToFetch("max");
-            }}
-          >
-            Year
-          </div>
-          <div
-            value="all"
-            onClick={() => {
-              setViewFieldDuration("max");
-              setTimeframeToFetch("max");
-            }}
-          >
-            All
-          </div>
-        </div>
+        <ChartControls
+          setViewFieldDuration={setViewFieldDuration}
+          setTimeFrameToFetch={setTimeFrameToFetch}
+        />
         <div className="chart"></div>
       </div>
     </>

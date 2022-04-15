@@ -19,26 +19,6 @@
   background-color: lightgray;
 }
 
-.chart-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid yellow;
-  height: 10%;
-}
-
-.chart-controls div {
-  margin-top: 0;
-  padding: 0.6em 0.8em;
-  border: 1px solid rgb(227, 163, 227);
-  border-radius: 1em;
-}
-
-.chart-controls div:hover {
-  color: white;
-  background-color: rgb(227, 163, 227);
-}
-
 .chart {
   border: 1px solid pink;
   display: flex;
