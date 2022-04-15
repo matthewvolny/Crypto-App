@@ -50,14 +50,28 @@ export default function Chart() {
         //formats "price" data based on whether it is in "days" or "hrs"
         const priceData = data.prices;
         const priceDataArray = [];
-        if (/*duration === "365" ||*/ duration === "max") {
-          console.log(`data in "day" format`);
-          priceData.forEach((priceArray) => {
-            priceDataArray.push({
-              time: moment(priceArray[0]).format("MM/DD/YYYY"),
-              value: priceArray[1].toFixed(4),
+        if (duration === "max") {
+          //if viewfield set to "max"
+          if (viewFieldDuration === "max") {
+            console.log(`data in "week" format`);
+            for (let i = priceData.length - 1; i >= 0; i--) {
+              if (i % 7 === 0) {
+                priceDataArray.unshift({
+                  time: moment(priceData[i][0]).format("MM/DD/YYYY"),
+                  value: priceData[i][1].toFixed(4),
+                });
+              }
+            }
+          } else {
+            //if viewfield set to "365"
+            console.log(`data in "day" format`);
+            priceData.forEach((priceArray) => {
+              priceDataArray.push({
+                time: moment(priceArray[0]).format("MM/DD/YYYY"),
+                value: priceArray[1].toFixed(4),
+              });
             });
-          });
+          }
         } else {
           // console.log(`price in "hr" format`);
           priceData.forEach((priceArray) => {
@@ -72,14 +86,29 @@ export default function Chart() {
         //formats "volume" data based on whether it is in "days" or "hrs"
         const volumeData = data.total_volumes;
         const volumeDataArray = [];
-        if (/*duration === "365" ||*/ duration === "max") {
-          console.log(`data in "day" format`);
-          volumeData.forEach((volumeArray) => {
-            volumeDataArray.push({
-              time: moment(volumeArray[0]).format("MM/DD/YYYY"),
-              value: volumeArray[1].toFixed(4),
+        if (duration === "max") {
+          //if viewfield set to "max"
+          if (viewFieldDuration === "max") {
+            console.log(`data in "week" format`);
+            for (let i = volumeData.length - 1; i >= 0; i--) {
+              if (i % 7 === 0) {
+                volumeDataArray.unshift({
+                  time: moment(volumeData[i][0]).format("MM/DD/YYYY"),
+                  value: volumeData[i][1].toFixed(4),
+                });
+              }
+            }
+          } else {
+            //if viewfield set to "365"
+            console.log(`data in "day" format`);
+            volumeData.forEach((volumeArray) => {
+              volumeDataArray.push({
+                time: moment(volumeArray[0]).format("MM/DD/YYYY"),
+                value: volumeArray[1].toFixed(4),
+              });
             });
-          });
+          }
+          //
         } else {
           // console.log(`volume in "hr" format`);
           volumeData.forEach((volumeArray) => {
