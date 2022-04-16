@@ -10,9 +10,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  height: 80vh;
+  height: 85vh;
   padding: 1.5em;
-  margin: 1.5em;
+  margin: 1.3em;
 }
 
 .sidebar-flex {
@@ -85,4 +85,5 @@
   height: 100%;
   width: 25%;
   border: 1px solid teal;
+  padding: 1em;
 }

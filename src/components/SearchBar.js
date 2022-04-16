@@ -17,7 +17,7 @@ export default function SearchBar() {
           }}
           value={searchInput}
           type="text"
-          placeholder="Search cryptocurrency"
+          placeholder="Search cryptocurrencies"
         />
         <button>Submit</button>
       </form>

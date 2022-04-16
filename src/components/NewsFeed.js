@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import axios from "axios";
+import "./newsFeed.css";
 
 export default function NewsFeed() {
   const [articles, setArticles] = useState();
@@ -8,16 +9,16 @@ export default function NewsFeed() {
   //const currentDate = moment().format("YYYY-MM-DD");
   const threeDaysAgo = moment().subtract(3, "d").format("YYYY-MM-DD");
 
-  //get ids for all coins listed and adds them to "coinData" (an array stored in state)
-  useEffect(() => {
+  //function calling api and storing article data in state
+  const fetchArticles = () => {
     axios
       .get(
         //list all coins (tens of thousands)
         `https://newsapi.org/v2/everything?q=crypto&from=${threeDaysAgo}&language=en&apiKey=69563e91b17745efad0051f4c02a3f94`
       )
       .then((response) => {
-        const newsArticles = response.data;
-        console.log(newsArticles);
+        const data = response.data;
+        // console.log(data);
 
         // const newsArticleArray = [];
         // newsArticles.forEach((article) => {
@@ -39,23 +40,28 @@ export default function NewsFeed() {
         //     sparkline: roundSparklineData(coin.sparkline_in_7d),
         //   });
 
-        setArticles(newsArticles);
+        setArticles(data.articles);
       });
-  }, []);
+  };
 
-  //   const articlesList = articles?.map((article) => {
-  //     return (
-  //       <div key={Math.floor(Math.random() * 10000)}>
-  //         <img src={article.urlToImage} alt="article"></img>
-  //         <div>{article.title}</div>
-  //         <div>{article.description}</div>
-  //         <div>{article.content}</div>
-  //         <div>{article.source.name}</div>
-  //         <div>{article.publishedAt}</div>
-  //         <a href={article.url}>Link</a>
-  //       </div>
-  //     );
-  //   });
+  //fetch articles when component mounts
+  // useEffect(() => {
+  //   fetchArticles();
+  // }, []);
 
-  return <div></div>;
+  //maps articles stored in state, returning article element
+  const articlesList = articles?.map((article) => {
+    return (
+      <div className="article" key={Math.floor(Math.random() * 10000)}>
+        <img src={article.urlToImage} alt="article"></img>
+        <div className="article-title">{article.title}</div>
+        <div>{article.description}</div>
+        <div>{article.source.name}</div>
+        <div>{article.publishedAt}</div>
+        <a href={article.url}>Link</a>
+      </div>
+    );
+  });
+
+  return <>{articlesList}</>;
 }
