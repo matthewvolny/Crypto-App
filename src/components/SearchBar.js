@@ -1,26 +1,32 @@
 import React, { useState } from "react";
+import ConditionalRenderList from "./ConditionalRenderList";
+import "./searchBar.css";
+
+//comes from app.js
+const list = [
+  { id: 1, data: "pizza" },
+  { id: 2, data: "beer" },
+  { id: 3, data: "pasta" },
+  { id: 4, data: "broccoli" },
+  { id: 5, data: "cheetos" },
+];
 
 export default function SearchBar() {
-  const [searchInput, setSearchInput] = useState();
+  const [value, setValue] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
+  const handleChange = (e) => {
+    setValue(e.target.value);
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          onChange={(e) => {
-            setSearchInput(e.target.value);
-          }}
-          value={searchInput}
-          type="text"
-          placeholder="Search cryptocurrencies"
-        />
-        <button>Submit</button>
-      </form>
+    <div className="searchbar-container">
+      <input
+        onChange={handleChange}
+        value={value}
+        type="text"
+        placeholder="Search cryptocurrencies"
+      />
+      <ConditionalRenderList value={value} list={list} />
     </div>
   );
 }

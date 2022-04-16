@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 //import Context from "../context/context";
 import { createChart } from "lightweight-charts";
+import SearchBar from "./SearchBar";
 import CoinRow from "./CoinRow";
 
 import "./coinlist.css";
@@ -17,18 +18,7 @@ export default function Coinlist(props) {
   return (
     <>
       <div className="coinlist-controls">
-        {/* form */}
-        <form className="search-form" onSubmit={handleSubmit}>
-          <input
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-            }}
-            value={searchInput}
-            type="text"
-            placeholder="Search cryptocurrency"
-          />
-          <button>Submit</button>
-        </form>
+        <SearchBar />
         {/* sorting buttons */}
         <div className="sorting-buttons">
           <div>Rank</div>

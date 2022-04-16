@@ -4,13 +4,6 @@
   width: 100%;
 }
 
-.search-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid grey;
-}
-
 .search-form button {
   margin-top: 0;
 }
