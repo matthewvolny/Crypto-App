@@ -10,8 +10,7 @@ import "./App.css";
 function App() {
   const [coinData, setCoinData] = useState();
   const [selectedCoinData, setSelectedCoinData] = useState();
-  // const [coinChartData, setCoinChartData] = useState();
-  // const [actionClicked, setActionClicked] = useState();
+  const [allCoinIds, setAllCoinIds] = useState();
 
   //(2)shortens sparkline data array and rounds to four places
   //!check to make sure the "first" and "last" values are in the shortened array - need for accurate coloring
@@ -112,23 +111,22 @@ function App() {
             }
           }
         }
-        // console.log(coinDataCopy);
-        //!creates an infinite loop
-        //setCoinData(coinDataCopy);//!currently creates an infinite loop
+        //store all ids as a searchable list (for search bar dropdown)
+        console.log(allCoinsIdArray);
+        setAllCoinIds(allCoinsIdArray);
       });
   };
 
   //
 
   useEffect(() => {
-    // fetchInitialCoinSet();
+    fetchInitialCoinSet();
     // fetchLargerCoinSet(); //asynchronous
   }, []);
 
   //get "correct" ids for all coins listed
   useEffect(() => {
     getIdsAfterPageLoad();
-    // fetchLargerCoinSet();//sets off an infinite loop
   }, [coinData]);
 
   return (
@@ -136,6 +134,9 @@ function App() {
       value={{
         selectedCoinData,
         setSelectedCoinData,
+        allCoinIds,
+        setAllCoinIds,
+
         // actionClicked,
         // setActionClicked,
         // coinChartData,
