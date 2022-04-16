@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Context from "./context/context";
 import Coinlist from "./components/Coinlist";
 import Chart from "./components/Chart";
+import NewsFeed from "./components/NewsFeed";
 import axios from "axios";
 import "./App.css";
 
@@ -216,7 +217,7 @@ function App() {
           </BrowserRouter>
         </div>
         <div className="right-flex">
-          <div>Hello</div>
+          <NewsFeed />
         </div>
       </div>
     </Context.Provider>
