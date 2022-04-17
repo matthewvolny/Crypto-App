@@ -8,11 +8,12 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  const [coinData, setCoinData] = useState();
+  const [coinData, setCoinData] = useState([]);
   const [selectedCoinData, setSelectedCoinData] = useState();
   const [allCoinIds, setAllCoinIds] = useState();
+  const [additionalCoinIdInfo, setAdditionalCoinIdInfo] = useState([]);
 
-  //(2)shortens sparkline data array and rounds to four places
+  //(3)shortens sparkline data array and rounds to four places
   //!check to make sure the "first" and "last" values are in the shortened array - need for accurate coloring
   const roundSparklineData = (data) => {
     let dataArray = data.price;
@@ -29,7 +30,7 @@ function App() {
     return dataArray;
   };
 
-  //(1)initial api call retrieves list data for a subset of coins
+  //(2)initial api call retrieves list data for a subset of coins
   const fetchInitialCoinSet = () => {
     axios
       .get(
@@ -41,6 +42,7 @@ function App() {
         const coinDataArray = [];
         data.forEach((coin) => {
           coinDataArray.push({
+            id: coin.id,
             rank: coin.market_cap_rank,
             image: coin.image,
             name: coin.name,
@@ -55,45 +57,115 @@ function App() {
             sparkline: roundSparklineData(coin.sparkline_in_7d),
           });
         });
-        console.log(coinDataArray);
+        // console.log(coinDataArray);
         setCoinData(coinDataArray);
       });
   };
 
-  //(3)asynchronously fetch larger coin set after rendering initial set
-  const fetchLargerCoinSet = async () => {
-    await axios
-      .get(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h%2C7d"
-      )
-      .then((response) => {
-        const data = response.data;
-        // console.log(data);
-        const coinDataArray = [];
-        data.forEach((coin) => {
-          coinDataArray.push({
-            rank: coin.market_cap_rank,
-            image: coin.image,
-            name: coin.name,
-            symbol: coin.symbol,
-            price: coin.current_price.toLocaleString("en-US"),
-            percentChange24hr:
-              coin.price_change_percentage_24h_in_currency.toFixed(2),
-            percentChange7d:
-              coin.price_change_percentage_7d_in_currency.toFixed(2),
-            marketCap: coin.market_cap.toLocaleString("en-US"),
-            volume24hr: coin.total_volume.toLocaleString("en-US"),
-            sparkline: roundSparklineData(coin.sparkline_in_7d),
+  //()asynchronously fetch larger coin set after rendering initial set
+  // const fetchLargerCoinSet = async () => {
+  //   await axios
+  //     .get(
+  //       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h%2C7d"
+  //     )
+  //     .then((response) => {
+  //       const data = response.data;
+  //       // console.log(data);
+  //       const coinDataArray = [];
+  //       data.forEach((coin) => {
+  //         coinDataArray.push({
+  //           rank: coin.market_cap_rank,
+  //           image: coin.image,
+  //           name: coin.name,
+  //           symbol: coin.symbol,
+  //           price: coin.current_price.toLocaleString("en-US"),
+  //           percentChange24hr:
+  //             coin.price_change_percentage_24h_in_currency.toFixed(2),
+  //           percentChange7d:
+  //             coin.price_change_percentage_7d_in_currency.toFixed(2),
+  //           marketCap: coin.market_cap.toLocaleString("en-US"),
+  //           volume24hr: coin.total_volume.toLocaleString("en-US"),
+  //           sparkline: roundSparklineData(coin.sparkline_in_7d),
+  //         });
+  //       });
+  //       console.log(coinDataArray);
+  //       setCoinData(coinDataArray);
+  //     });
+  // };
+
+  //
+
+  //(4)asynchronously fetch larger coin set after rendering initial set
+  // const fetchAllCoins = async (initialPage, stopIndex) => {
+  //   const coinDataArray = [...additionalCoinIdInfo];
+  //   for (let i = initialPage; i <= stopIndex; i++) {
+  //     await axios
+  //       .get(
+  //         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${i}&sparkline=false`
+  //       )
+  //       .then((response) => {
+  //         const data = response.data;
+  //         data.forEach((coin) => {
+  //           if (coin.rank !== null) {
+  //             coinDataArray.push({
+  //               rank: coin.market_cap_rank,
+  //               image: coin.image,
+  //               name: coin.name,
+  //               symbol: coin.symbol,
+  //             });
+  //           }
+  //         });
+  //       });
+  //   }
+  //   setAdditionalCoinIdInfo(coinDataArray);
+  //   console.log(additionalCoinIdInfo);
+  // };
+
+  const fetchAllRankedCoins = (initialPage, stopIndex) => {
+    console.log("in all ranked coins");
+    const coinDataArray = [...coinData];
+    for (let i = initialPage; i <= stopIndex; i++) {
+      axios
+        .get(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${i}&sparkline=true&price_change_percentage=24h%2C7d`
+        )
+        .then((response) => {
+          const data = response.data;
+          // console.log(data);
+          data.forEach((coin) => {
+            // if (coin.rank) {
+            coinDataArray.push({
+              id: coin.id,
+              rank: coin.market_cap_rank,
+              image: coin.image,
+              name: coin.name,
+              symbol: coin.symbol,
+              price: coin.current_price?.toLocaleString("en-US"),
+              percentChange24hr:
+                coin.price_change_percentage_24h_in_currency?.toFixed(2),
+              percentChange7d:
+                coin.price_change_percentage_7d_in_currency?.toFixed(2),
+              marketCap: coin.market_cap?.toLocaleString("en-US"),
+              volume24hr: coin.total_volume?.toLocaleString("en-US"),
+              sparkline: roundSparklineData(coin.sparkline_in_7d),
+            });
+            // }
           });
+          // console.log(coinDataArray);
+          const sortedCoinDataArray = coinDataArray.sort((a, b) => {
+            return a.rank - b.rank;
+          });
+          setCoinData(sortedCoinDataArray);
         });
-        console.log(coinDataArray);
-        setCoinData(coinDataArray);
-      });
+    }
+    // console.log(`this is the final "coinData"`);
+    // console.log(coinDataArray);
+    // setCoinData(coinDataArray);
   };
 
-  //(4)get ids for all coins listed and adds them to "coinData" (an array stored in state)
-  const getIdsAfterPageLoad = async () => {
-    await axios
+  //()get ids for all coins listed and adds them to "coinData" (an array stored in state)
+  const getIdsAfterPageLoad = /*async*/ () => {
+    /*await*/ axios
       .get(
         //list all coins (tens of thousands)
         "https://api.coingecko.com/api/v3/coins/list"
@@ -112,22 +184,36 @@ function App() {
           }
         }
         //store all ids as a searchable list (for search bar dropdown)
-        console.log(allCoinsIdArray);
+        // console.log("allCoinsIdArray");
+        // console.log(allCoinsIdArray);
         setAllCoinIds(allCoinsIdArray);
       });
   };
 
-  //
-
+  //(1) fetch initial coins to list
   useEffect(() => {
     fetchInitialCoinSet();
-    // fetchLargerCoinSet(); //asynchronous
+    fetchAllRankedCoins(1, 15);
+    //fetchLargerCoinSet(); //asynchronous
   }, []);
 
-  //get "correct" ids for all coins listed
   useEffect(() => {
-    getIdsAfterPageLoad();
+    // console.log(coinData);
   }, [coinData]);
+
+  //()get "correct" ids for all coins listed
+  // useEffect(() => {
+  //   // getIdsAfterPageLoad();
+  //   //
+  //   //fetch detailed info for all ranked coins
+  //   //fetchAllRankedCoins(1, 15);
+  //   console.log(coinData);
+  // }, [coinData]);
+
+  // useEffect(() => {
+  //   console.log("additionalCoinIdInfo");
+  //   console.log(additionalCoinIdInfo);
+  // }, [additionalCoinIdInfo]);
 
   return (
     <Context.Provider

@@ -37,8 +37,10 @@ export default function Coinlist(props) {
         </div>
       </div>
       <div className="coinlist">
-        {props.coinData?.map((coin) => {
-          return <CoinRow coin={coin} />;
+        {props.coinData?.map((coin, index) => {
+          if (index < 50) {
+            return <CoinRow coin={coin} />;
+          }
         })}
       </div>
     </>
