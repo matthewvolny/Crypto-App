@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Context from "./context/context";
 import Coinlist from "./components/Coinlist";
 import Chart from "./components/Chart";
+import Login from "./components/Login";
+import SearchBar from "./components/SearchBar";
 import NewsFeed from "./components/NewsFeed";
 import axios from "axios";
 import "./App.css";
@@ -224,13 +226,6 @@ function App() {
         selectedCoinData,
         setSelectedCoinData,
         coinData,
-        // allCoinIds,
-        // setAllCoinIds,
-
-        // actionClicked,
-        // setActionClicked,
-        // coinChartData,
-        // setCoinChartData,
       }}
     >
       <div className="container">
@@ -243,8 +238,8 @@ function App() {
           <div>Settings</div>
           <div>Log Out</div>
         </div>
-        <div className="middle-flex">
-          <BrowserRouter>
+        <BrowserRouter>
+          <div className="middle-flex">
             <div className="chart-container">
               <Routes>
                 {/* <Route path="/" element={<SearchBar />} /> */}
@@ -255,11 +250,13 @@ function App() {
             <div className="coinlist-container">
               <Coinlist coinData={coinData} />
             </div>
-          </BrowserRouter>
-        </div>
-        <div className="right-flex">
-          <NewsFeed />
-        </div>
+          </div>
+          <div className="right-flex">
+            <Login />
+            <SearchBar />
+            <NewsFeed />
+          </div>
+        </BrowserRouter>
       </div>
     </Context.Provider>
   );
