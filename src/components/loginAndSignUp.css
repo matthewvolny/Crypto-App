@@ -1,0 +1,16 @@
+.login-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  padding: 0.6em 0.8em;
+  border: 1px solid rgb(227, 163, 227);
+  border-radius: 1em;
+}
+
+.button:hover {
+  color: white;
+  background-color: rgb(227, 163, 227);
+}

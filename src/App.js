@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Context from "./context/context";
 import Coinlist from "./components/Coinlist";
 import Chart from "./components/Chart";
-import Login from "./components/Login";
+import LoginAndSignUp from "./components/LoginAndSignUp";
 import SearchBar from "./components/SearchBar";
 import NewsFeed from "./components/NewsFeed";
 import axios from "axios";
@@ -252,7 +252,7 @@ function App() {
             </div>
           </div>
           <div className="right-flex">
-            <Login />
+            <LoginAndSignUp />
             <SearchBar />
             <NewsFeed />
           </div>
