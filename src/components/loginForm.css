@@ -1,5 +1,36 @@
+.background-mask {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(104, 104, 104, 0.7);
+  width: 100vw;
+}
+
+.login-container {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  width: 400px;
+  height: 600px;
+  padding: 1.5em 2em;
+  border: 1px solid tan;
+  border-radius: 1em;
+}
+
 .heading {
   font-size: 1.5rem;
+}
+
+.close-button {
+  width: 35px;
+  display: inline-block;
 }
 
 .link {
