@@ -10,8 +10,8 @@ import "./App.css";
 function App() {
   const [coinData, setCoinData] = useState([]);
   const [selectedCoinData, setSelectedCoinData] = useState();
-  const [allCoinIds, setAllCoinIds] = useState();
-  const [additionalCoinIdInfo, setAdditionalCoinIdInfo] = useState([]);
+  // const [allCoinIds, setAllCoinIds] = useState();
+  // const [additionalCoinIdInfo, setAdditionalCoinIdInfo] = useState([]);
 
   //(3)shortens sparkline data array and rounds to four places
   //!check to make sure the "first" and "last" values are in the shortened array - need for accurate coloring
@@ -133,6 +133,7 @@ function App() {
           const data = response.data;
           // console.log(data);
           data.forEach((coin) => {
+            //!may want to add sorting on coin rank
             // if (coin.rank) {
             coinDataArray.push({
               id: coin.id,
@@ -155,7 +156,9 @@ function App() {
           const sortedCoinDataArray = coinDataArray.sort((a, b) => {
             return a.rank - b.rank;
           });
-          setCoinData(sortedCoinDataArray);
+          console.log("sorted coin data");
+          console.log(sortedCoinDataArray); //coin data sorted
+          setCoinData(sortedCoinDataArray); //!not sorted in state (probably missing an update)
         });
     }
     // console.log(`this is the final "coinData"`);
@@ -164,31 +167,31 @@ function App() {
   };
 
   //()get ids for all coins listed and adds them to "coinData" (an array stored in state)
-  const getIdsAfterPageLoad = /*async*/ () => {
-    /*await*/ axios
-      .get(
-        //list all coins (tens of thousands)
-        "https://api.coingecko.com/api/v3/coins/list"
-      )
-      .then((response) => {
-        const allCoinsIdArray = response.data;
-        // console.log(allCoinsIdArray);
-        // console.log(coinData);
-        //!updating state by setting "equal", not by creating a copy and pushing
-        const coinDataCopy = coinData;
-        for (let i = 0; i < coinDataCopy.length; i++) {
-          for (let j = 0; j < allCoinsIdArray.length; j++) {
-            if (coinDataCopy[i].name === allCoinsIdArray[j].name) {
-              coinDataCopy[i].id = allCoinsIdArray[j].id;
-            }
-          }
-        }
-        //store all ids as a searchable list (for search bar dropdown)
-        // console.log("allCoinsIdArray");
-        // console.log(allCoinsIdArray);
-        setAllCoinIds(allCoinsIdArray);
-      });
-  };
+  // const getIdsAfterPageLoad = /*async*/ () => {
+  //   /*await*/ axios
+  //     .get(
+  //       //list all coins (tens of thousands)
+  //       "https://api.coingecko.com/api/v3/coins/list"
+  //     )
+  //     .then((response) => {
+  //       const allCoinsIdArray = response.data;
+  //       // console.log(allCoinsIdArray);
+  //       // console.log(coinData);
+  //       //!updating state by setting "equal", not by creating a copy and pushing
+  //       const coinDataCopy = coinData;
+  //       for (let i = 0; i < coinDataCopy.length; i++) {
+  //         for (let j = 0; j < allCoinsIdArray.length; j++) {
+  //           if (coinDataCopy[i].name === allCoinsIdArray[j].name) {
+  //             coinDataCopy[i].id = allCoinsIdArray[j].id;
+  //           }
+  //         }
+  //       }
+  //       //store all ids as a searchable list (for search bar dropdown)
+  //       // console.log("allCoinsIdArray");
+  //       // console.log(allCoinsIdArray);
+  //       setAllCoinIds(allCoinsIdArray);
+  //     });
+  // };
 
   //(1) fetch initial coins to list
   useEffect(() => {
@@ -220,8 +223,9 @@ function App() {
       value={{
         selectedCoinData,
         setSelectedCoinData,
-        allCoinIds,
-        setAllCoinIds,
+        coinData,
+        // allCoinIds,
+        // setAllCoinIds,
 
         // actionClicked,
         // setActionClicked,

@@ -1,0 +1,21 @@
+.icon {
+  width: 35px;
+}
+
+.search-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid green;
+  padding: 0.6em 0.8em;
+  border-radius: 1em;
+}
+
+.search-item:hover {
+  background-color: rgb(154, 240, 160);
+}
+
+.search-item * {
+  display: inline-block;
+}
