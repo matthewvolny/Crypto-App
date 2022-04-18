@@ -1,19 +1,12 @@
 import React, { useState } from "react";
 import SearchList from "./SearchList";
+import { useNavigate } from "react-router-dom";
 import "./searchBar.css";
-
-//comes from app.js
-// const list = [
-//   { id: 1, data: "pizza" },
-//   { id: 2, data: "beer" },
-//   { id: 3, data: "pasta" },
-//   { id: 4, data: "broccoli" },
-//   { id: 5, data: "cheetos" },
-// ];
 
 export default function SearchBar() {
   const [value, setValue] = useState("");
   const [searchListVisibility, setSearchListVisibility] = useState(true);
+  const [firstListItem, setFirstListItem] = useState();
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -25,17 +18,32 @@ export default function SearchBar() {
     setSearchListVisibility(true);
   };
 
+  const navigate = useNavigate();
+  const typedValueSearch = (e) => {
+    e.preventDefault();
+    console.log("form submitted");
+    console.log(firstListItem.name);
+    navigate(`/currencies/${firstListItem.name}`);
+    setValue("");
+  };
+
   return (
     <div className="searchbar-container">
-      <input
-        onChange={handleChange}
-        value={value}
-        type="text"
-        placeholder="Search cryptocurrencies"
-      />
-      {searchListVisibility && (
-        <SearchList value={value} clearSearchBar={clearSearchBar} />
-      )}
+      <form onSubmit={typedValueSearch}>
+        <input
+          onChange={handleChange}
+          value={value}
+          type="text"
+          placeholder="Search cryptocurrencies"
+        />
+        {searchListVisibility && (
+          <SearchList
+            value={value}
+            clearSearchBar={clearSearchBar}
+            setFirstListItem={setFirstListItem}
+          />
+        )}
+      </form>
     </div>
   );
 }

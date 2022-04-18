@@ -3,7 +3,12 @@ import { NavLink } from "react-router-dom";
 import Context from "../context/context";
 import "./searchList.css";
 
-export default function SearchList({ value, list, clearSearchBar }) {
+export default function SearchList({
+  value,
+  list,
+  clearSearchBar,
+  setFirstListItem,
+}) {
   // console.log(value, list);
   const { coinData, setSelectedCoinData } = useContext(Context);
   const [filteredListLength, setFilteredListLength] = useState(0);
@@ -36,6 +41,11 @@ export default function SearchList({ value, list, clearSearchBar }) {
       } else {
         console.log("filtered list found");
         return filteredList.map((item, index) => {
+          //makes first list item retrievable on form submit (click "enter" in searchBar component)
+          if (index === 0) {
+            setFirstListItem(item);
+            setSelectedCoinData(item);
+          }
           if (allResultsVisibility) {
             return (
               <div className="search-item">
