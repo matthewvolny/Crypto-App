@@ -3,7 +3,10 @@ import LoginForm from "./LoginForm";
 import "./loginAndSignUp.css";
 
 export default function LoginAndSignUp() {
-  const [typeOfForm, setTypeOfForm] = useState("signup");
+  const [typeOfForm, setTypeOfForm] = useState();
+  const [formVisible, setFormVisible] = useState(false);
+
+  const showForm = () => {};
 
   return (
     <div>
@@ -12,6 +15,7 @@ export default function LoginAndSignUp() {
           className="button"
           onClick={() => {
             setTypeOfForm("login");
+            setFormVisible(true);
           }}
         >
           Log in
@@ -20,12 +24,18 @@ export default function LoginAndSignUp() {
           className="button"
           onClick={() => {
             setTypeOfForm("signup");
+            setFormVisible(true);
           }}
         >
           Sign up
         </div>
       </div>
-      <LoginForm typeOfForm={typeOfForm} setTypeOfForm={setTypeOfForm} />
+      <LoginForm
+        typeOfForm={typeOfForm}
+        setTypeOfForm={setTypeOfForm}
+        formVisible={formVisible}
+        setFormVisible={setFormVisible}
+      />
     </div>
   );
 }

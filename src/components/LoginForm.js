@@ -1,8 +1,36 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import closeIcon from "../images/close-icon.png";
 import "./loginForm.css";
 
-export default function LoginForm({ typeOfForm, setTypeOfForm }) {
+export default function LoginForm({
+  typeOfForm,
+  setTypeOfForm,
+  formVisible,
+  setFormVisible,
+}) {
+  const isMounted = useRef(false);
+
+  const hideLoginForm = () => {
+    const loginContainer = document.querySelector(".login-container");
+    loginContainer.removeAttribute("login-container-visible");
+    loginContainer.setAttribute("id", "hidden");
+    const backgroundMask = document.querySelector(".background-mask");
+    backgroundMask.removeAttribute("visible");
+    backgroundMask.setAttribute("id", "hidden");
+  };
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const loginContainer = document.querySelector(".login-container");
+      loginContainer.setAttribute("id", "login-container-visible");
+      const backgroundMask = document.querySelector(".background-mask");
+      backgroundMask.setAttribute("id", "visible");
+      setFormVisible(false);
+    } else {
+      isMounted.current = true;
+    }
+  }, [formVisible]);
+
   return (
     <div className="background-mask">
       <div className="login-container">
@@ -11,6 +39,7 @@ export default function LoginForm({ typeOfForm, setTypeOfForm }) {
             <div>
               <div className="heading">Login</div>
               <img
+                onClick={hideLoginForm}
                 className="close-button"
                 alt="close-button"
                 src={closeIcon}
@@ -31,6 +60,7 @@ export default function LoginForm({ typeOfForm, setTypeOfForm }) {
             <div>
               <div className="heading">Create an account</div>
               <img
+                onClick={hideLoginForm}
                 alt="close-button"
                 className="close-button"
                 src={closeIcon}

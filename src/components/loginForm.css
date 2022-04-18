@@ -5,8 +5,9 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(104, 104, 104, 0.7);
+  background-color: rgba(117, 125, 145, 0.7);
   width: 100vw;
+  visibility: hidden;
 }
 
 .login-container {
@@ -30,7 +31,13 @@
 
 .close-button {
   width: 35px;
-  display: inline-block;
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
+
+.close-button:hover {
+  background-color: rgba(104, 104, 104, 0.05);
 }
 
 .link {
@@ -47,3 +54,36 @@
   color: white;
   background-color: rgb(227, 163, 227);
 }
+
+#hidden {
+  visibility: hidden;
+}
+
+#visible {
+  visibility: visible;
+}
+
+#login-container-visible {
+  animation: scale-in-ver-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes scale-in-ver-center {
+  0% {
+    transform: scaleY(0);
+    /* could maybe shift this even lower (i.e. 80% or more?) */
+    transform-origin: 0% 80%;
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    /* could maybe shift this even lower (i.e. 80% or more?) */
+    transform-origin: 0% 80%;
+    opacity: 1;
+  }
+}
+
+/* //transition: all 300ms ease-in-out; */
+/*   .hide-select-rover-button {
+    visibility: hidden;
+    opacity: 0;
+  } */
