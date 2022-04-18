@@ -13,9 +13,16 @@ import "./searchBar.css";
 
 export default function SearchBar() {
   const [value, setValue] = useState("");
+  const [searchListVisibility, setSearchListVisibility] = useState(true);
 
   const handleChange = (e) => {
     setValue(e.target.value);
+  };
+
+  const clearSearchBar = () => {
+    setSearchListVisibility(false);
+    setValue("");
+    setSearchListVisibility(true);
   };
 
   return (
@@ -26,7 +33,9 @@ export default function SearchBar() {
         type="text"
         placeholder="Search cryptocurrencies"
       />
-      <SearchList value={value} /*list={list}*/ />
+      {searchListVisibility && (
+        <SearchList value={value} clearSearchBar={clearSearchBar} />
+      )}
     </div>
   );
 }
