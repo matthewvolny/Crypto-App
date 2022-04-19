@@ -32,6 +32,18 @@ function App() {
     return dataArray;
   };
 
+  //!price rounding function (should be improved, try to match coinmarketcap)
+  const roundCoinPrice = (price) => {
+    if (price < 0 && price > 0.0001) {
+      return price?.toFixed(4);
+    } else if (price < 0.0001 && price > 0.00001) {
+      return price?.toFixed(5);
+    } else if (price < 0.00001 && price > 0.000001) {
+      return price?.toFixed(6);
+    }
+    return price?.toFixed(2);
+  };
+
   //(2)initial api call retrieves list data for a subset of coins
   const fetchInitialCoinSet = () => {
     axios
@@ -49,13 +61,15 @@ function App() {
             image: coin.image,
             name: coin.name,
             symbol: coin.symbol,
-            price: coin.current_price.toLocaleString("en-US"),
+            price: roundCoinPrice(
+              coin.current_price
+            ) /*?.toLocaleString("en-US"), //!not added commas*/,
             percentChange24hr:
               coin.price_change_percentage_24h_in_currency.toFixed(2),
             percentChange7d:
               coin.price_change_percentage_7d_in_currency.toFixed(2),
-            marketCap: coin.market_cap.toLocaleString("en-US"), //!not displayed initially
-            volume24hr: coin.total_volume.toLocaleString("en-US"), //!not displayed initially
+            marketCap: coin.market_cap.toLocaleString("en-US"),
+            volume24hr: coin.total_volume.toLocaleString("en-US"),
             sparkline: roundSparklineData(coin.sparkline_in_7d),
           });
         });
@@ -143,7 +157,9 @@ function App() {
               image: coin.image,
               name: coin.name,
               symbol: coin.symbol,
-              price: coin.current_price?.toLocaleString("en-US"),
+              price: roundCoinPrice(coin.current_price)?.toLocaleString(
+                "en-US"
+              ),
               percentChange24hr:
                 coin.price_change_percentage_24h_in_currency?.toFixed(2),
               percentChange7d:
@@ -158,8 +174,8 @@ function App() {
           const sortedCoinDataArray = coinDataArray.sort((a, b) => {
             return a.rank - b.rank;
           });
-          console.log("sorted coin data");
-          console.log(sortedCoinDataArray); //coin data sorted
+          //console.log("sorted coin data");
+          //console.log(sortedCoinDataArray); //coin data sorted
           setCoinData(sortedCoinDataArray); //!not sorted in state (probably missing an update)
         });
     }
@@ -248,7 +264,7 @@ function App() {
               </Routes>
             </div>
             <div className="coinlist-container">
-              <Coinlist coinData={coinData} />
+              <Coinlist coinData={coinData} setCoinData={setCoinData} />
             </div>
           </div>
           <div className="right-flex">
