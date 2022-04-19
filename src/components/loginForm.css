@@ -5,9 +5,10 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(117, 125, 145, 0.7);
+  background-color: rgba(117, 125, 145, 0);
   width: 100vw;
   visibility: hidden;
+  transition: all 350ms ease-in-out;
 }
 
 .login-container {
@@ -61,29 +62,52 @@
 
 #visible {
   visibility: visible;
+  /* remember what is being transitioned is opacity on background color */
+  background-color: rgba(117, 125, 145, 0.7);
+  transition: all 350ms ease-in-out;
 }
 
 #login-container-visible {
-  animation: scale-in-ver-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: scale-in-ver-center 0.35s cubic-bezier(0.05, 0.53, 0.34, 1) both;
 }
 
 @keyframes scale-in-ver-center {
   0% {
     transform: scaleY(0);
     /* could maybe shift this even lower (i.e. 80% or more?) */
-    transform-origin: 0% 80%;
+    transform-origin: 0% 60%;
     opacity: 0;
+  }
+  20% {
+    /* could maybe shift this even lower (i.e. 80% or more?) */
+    transform-origin: 0% 60%;
+    opacity: 0.1;
   }
   100% {
     transform: scaleY(1);
     /* could maybe shift this even lower (i.e. 80% or more?) */
-    transform-origin: 0% 80%;
+    transform-origin: 0% 60%;
     opacity: 1;
   }
 }
 
-/* //transition: all 300ms ease-in-out; */
-/*   .hide-select-rover-button {
-    visibility: hidden;
+#login-container-hidden {
+  animation: scale-out-vertical-center 0.35s ease-out both;
+}
+
+@keyframes scale-out-vertical-center {
+  0% {
+    transform: scaleY(1);
+    transform-origin: 0% 60%;
+    opacity: 1;
+  }
+  20% {
+    transform-origin: 0% 60%;
+    opacity: 0.6;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: 0% 60%;
     opacity: 0;
-  } */
+  }
+}

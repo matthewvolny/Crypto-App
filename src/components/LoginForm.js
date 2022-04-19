@@ -13,7 +13,7 @@ export default function LoginForm({
   const hideLoginForm = () => {
     const loginContainer = document.querySelector(".login-container");
     loginContainer.removeAttribute("login-container-visible");
-    loginContainer.setAttribute("id", "hidden");
+    loginContainer.setAttribute("id", "login-container-hidden");
     const backgroundMask = document.querySelector(".background-mask");
     backgroundMask.removeAttribute("visible");
     backgroundMask.setAttribute("id", "hidden");
