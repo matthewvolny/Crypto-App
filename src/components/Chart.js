@@ -30,12 +30,14 @@ export default function Chart() {
     percentChange7d,
     marketCap,
     volume24hr,
+    description,
   } = selectedCoinData;
 
   const coinId = selectedCoinData.id;
-  let globalChart;
-  let globalLineSeries;
-  let globalVolumeSeries;
+
+  // let globalChart;
+  // let globalLineSeries;
+  // let globalVolumeSeries;
 
   //(2)retrieves price/volume data for for varying periods of time
   const retrieveChartData = (duration) => {
@@ -275,9 +277,9 @@ export default function Chart() {
       // code block
     }
     //global variables used to update the chart (not currently being used)
-    globalChart = chart;
-    globalLineSeries = lineSeries;
-    globalVolumeSeries = volumeSeries;
+    // globalChart = chart;
+    // globalLineSeries = lineSeries;
+    // globalVolumeSeries = volumeSeries;
   };
 
   //(4b)change chart data(two methods)
@@ -341,6 +343,25 @@ export default function Chart() {
     }
   }, [coinChartData, viewFieldDuration]);
 
+  // const fetchCoinDescription = (id) => {
+  //   axios
+  //     .get(`https://api.coingecko.com/api/v3/coins/${id}`)
+  //     .then((response) => {
+  //       const data = response.data;
+  //       console.log(data);
+  //       console.log(data.description.en);
+  //       const selectedCoinData = selectedCoinData;
+  //       selectedCoinData.description = data.description.en;
+
+  //       // console.log(coinDataArray);
+  //       // setCoinData(coinDataArray);
+  //     });
+  // };
+
+  // // useEffect(() => {
+  // //   fetchCoinDescription(id);
+  // // }, []);
+
   return (
     <>
       <div className="coin-details-flex">
@@ -352,6 +373,7 @@ export default function Chart() {
         <div>{percentChange24hr}%</div>
         <div>{marketCap}</div>
         <div>{volume24hr}</div>
+        <div className="description">{description}</div>
       </div>
       <div className="chart-with-controls-container">
         <ChartControls

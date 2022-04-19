@@ -48,8 +48,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 0%;
-  /* flex-grow: 1; */
+  /* height: 0%; */
+  flex-grow: 1;
 }
 
 .coinlist-container {

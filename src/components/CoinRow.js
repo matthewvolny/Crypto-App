@@ -8,11 +8,15 @@ import "./coinrow.css";
 
 export default function CoinRow(props) {
   const [sparklineColor, setSparklineColor] = useState();
-  const { setSelectedCoinData, setCoinChartData } = useContext(Context);
+  const { selectedCoinData, setSelectedCoinData, setCoinChartData } =
+    useContext(Context);
+  const [selectedCoinDataWithDescription, setSelectedCoinDataWithDescription] =
+    useState();
   //const isMounted = useRef(false);
   // console.log(props);
   // const { name, price, percentChange, data } = props.coin;
   const {
+    id,
     rank,
     image,
     name,
@@ -34,6 +38,24 @@ export default function CoinRow(props) {
     }
   });
 
+  const fetchCoinDescription = (coin) => {
+    console.log("in fetchCoinDescription");
+    console.log(coin);
+    console.log(coin.id);
+    let selectedCoinInfo = coin;
+    axios
+      .get(`https://api.coingecko.com/api/v3/coins/${coin.id}`)
+      .then((response) => {
+        const data = response.data;
+        // console.log(data);
+        // console.log(data.description.en);
+        selectedCoinInfo.description = data.description.en;
+        // console.log("selectedCoinInfo");
+        // console.log(selectedCoinInfo);
+        setSelectedCoinDataWithDescription(selectedCoinInfo);
+      });
+  };
+
   return (
     <div className="coin-row">
       <div>{rank}</div>
@@ -43,10 +65,11 @@ export default function CoinRow(props) {
       <NavLink
         to={`/currencies/${name}`}
         key={rank}
+        onMouseEnter={() => {
+          fetchCoinDescription(props.coin);
+        }}
         onClick={() => {
-          setSelectedCoinData(props.coin);
-          // setActionClicked("day");
-          // retrieveDetailedChartData(name);
+          setSelectedCoinData(selectedCoinDataWithDescription);
         }}
       >
         {name}

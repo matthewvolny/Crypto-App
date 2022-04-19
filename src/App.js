@@ -170,6 +170,7 @@ function App() {
             });
             // }
           });
+
           // console.log(coinDataArray);
           const sortedCoinDataArray = coinDataArray.sort((a, b) => {
             return a.rank - b.rank;
