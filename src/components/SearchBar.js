@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import Context from "../context/context";
 import SearchList from "./SearchList";
 import { useNavigate } from "react-router-dom";
 import "./searchBar.css";
 
 export default function SearchBar() {
+  const { setSelectedCoinData } = useContext(Context);
   const [value, setValue] = useState("");
   const [searchListVisibility, setSearchListVisibility] = useState(true);
   const [firstListItem, setFirstListItem] = useState();
@@ -23,6 +25,7 @@ export default function SearchBar() {
     e.preventDefault();
     console.log("form submitted");
     console.log(firstListItem.name);
+    setSelectedCoinData(firstListItem);
     navigate(`/currencies/${firstListItem.name}`);
     setValue("");
   };

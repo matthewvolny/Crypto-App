@@ -38,6 +38,7 @@ export default function CoinRow(props) {
     }
   });
 
+  //adds "description" to coin selectedCoinInfo
   const fetchCoinDescription = (coin) => {
     console.log("in fetchCoinDescription");
     console.log(coin);

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Context from "../context/context";
+import axios from "axios";
 import "./searchList.css";
 
 export default function SearchList({
@@ -13,11 +14,33 @@ export default function SearchList({
   const { coinData, setSelectedCoinData } = useContext(Context);
   const [filteredListLength, setFilteredListLength] = useState(0);
   const [allResultsVisibility, setAllResultsVisibility] = useState(false);
+  const [selectedCoinDataWithDescription, setSelectedCoinDataWithDescription] =
+    useState();
 
+  //adds "description" to coin selectedCoinInfo
+  const fetchCoinDescription = (coin) => {
+    console.log("in fetchCoinDescription");
+    console.log(coin);
+    console.log(coin.id);
+    let selectedCoinInfo = coin;
+    axios
+      .get(`https://api.coingecko.com/api/v3/coins/${coin.id}`)
+      .then((response) => {
+        const data = response.data;
+        // console.log(data);
+        // console.log(data.description.en);
+        selectedCoinInfo.description = data.description.en;
+        // console.log("selectedCoinInfo");
+        // console.log(selectedCoinInfo);
+        setSelectedCoinDataWithDescription(selectedCoinInfo);
+      });
+  };
+
+  //!seems to be getting called as hovering over list items
   const Dropdown = () => {
     //if user enters value in search bar
     if (value) {
-      console.log(list);
+      // console.log(list);
 
       //checks input value against list of coins for matches
       const filteredList = coinData.filter((item) => {
@@ -43,15 +66,20 @@ export default function SearchList({
         return filteredList.map((item, index) => {
           //makes first list item retrievable on form submit (click "enter" in searchBar component)
           if (index === 0) {
-            setFirstListItem(item);
-            setSelectedCoinData(item);
+            fetchCoinDescription(item);
+            setFirstListItem(selectedCoinDataWithDescription);
+            // setSelectedCoinData(item);
           }
           if (allResultsVisibility) {
             return (
               <div className="search-item">
                 <NavLink
+                  //!this onEnter gets called over and over
+                  onMouseEnter={() => {
+                    fetchCoinDescription(item);
+                  }}
                   onClick={() => {
-                    setSelectedCoinData(item);
+                    setSelectedCoinData(selectedCoinDataWithDescription);
                     clearSearchBar();
                     setAllResultsVisibility(false);
                   }}
@@ -72,8 +100,12 @@ export default function SearchList({
               return (
                 <div className="search-item">
                   <NavLink
+                    //!this onEnter gets called over and over
+                    onMouseEnter={() => {
+                      fetchCoinDescription(item);
+                    }}
                     onClick={() => {
-                      setSelectedCoinData(item);
+                      setSelectedCoinData(selectedCoinDataWithDescription);
                       clearSearchBar();
                       setAllResultsVisibility(false);
                     }}
@@ -99,6 +131,19 @@ export default function SearchList({
       }
     }
   };
+
+  //  <NavLink
+  //    to={`/currencies/${name}`}
+  //    key={rank}
+  //    onMouseEnter={() => {
+  //      fetchCoinDescription(props.coin);
+  //    }}
+  //    onClick={() => {
+  //      setSelectedCoinData(selectedCoinDataWithDescription);
+  //    }}
+  //  >
+  //    {name}
+  //  </NavLink>;
 
   return (
     <div>
