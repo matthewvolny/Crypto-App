@@ -156,6 +156,10 @@ export default function SearchList({
   //   }
   // };
 
+  const clearDropdownList = () => {
+    setAllResultsVisibility(false);
+  };
+
   const noResultsMessage = (
     <div>
       <div>No results for '{value}'</div>
@@ -171,18 +175,22 @@ export default function SearchList({
         : filteredList?.map((item, index) => {
             //makes first list item retrievable on form submit (click "enter" in searchBar component)
             //!area is a problem because it registers first item on all others in the list
-            if (index === 0) {
-              fetchCoinDescription(item);
-              setFirstListItem(selectedCoinDataWithDescription);
-            }
+            // if (index === 0) {
+            //   fetchCoinDescription(item);
+            //   setFirstListItem(selectedCoinDataWithDescription);
+            // }
             if (allResultsVisibility) {
               return (
                 <DropdownItem
                   item={item}
                   fetchCoinDescription={fetchCoinDescription}
-                  setSelectedCoinData={setSelectedCoinData}
+                  //setSelectedCoinData={setSelectedCoinData}
                   setAllResultsVisibility={allResultsVisibility}
+                  selectedCoinDataWithDescription={
+                    selectedCoinDataWithDescription
+                  }
                   clearSearchBar={clearSearchBar}
+                  clearDropdownList={clearDropdownList}
                 />
               );
             } else {
@@ -191,9 +199,13 @@ export default function SearchList({
                   <DropdownItem
                     item={item}
                     fetchCoinDescription={fetchCoinDescription}
-                    setSelectedCoinData={setSelectedCoinData}
+                    //setSelectedCoinData={setSelectedCoinData}
                     setAllResultsVisibility={allResultsVisibility}
+                    selectedCoinDataWithDescription={
+                      selectedCoinDataWithDescription
+                    }
                     clearSearchBar={clearSearchBar}
+                    clearDropdownList={clearDropdownList}
                   />
                 );
               }

@@ -1,30 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import Context from "../context/context";
 
 export default function DropdownItem({
   item,
   fetchCoinDescription,
-  setSelectedCoinData,
+  //   setSelectedCoinData,
   setAllResultsVisibility,
   selectedCoinDataWithDescription,
   clearSearchBar,
+  clearDropdownList,
 }) {
+  const { selectedCoinData, setSelectedCoinData } = useContext(Context);
   return (
-    <div className="search-item">
+    <div
+      key={item.id}
+      className="search-item"
+      onMouseEnter={() => {
+        console.log("item on hover");
+        console.log(item);
+        fetchCoinDescription(item); //not always correct for 2+ coin in list
+      }}
+    >
       <NavLink
         //!this onEnter gets called over and over
-        onMouseEnter={() => {
-          console.log("item on hover");
-          console.log(item);
-          fetchCoinDescription(item); //not always correct for 2+ coin in list
-        }}
+
         onClick={() => {
+          console.log(selectedCoinData);
           setSelectedCoinData(selectedCoinDataWithDescription);
           clearSearchBar();
-          setAllResultsVisibility(false);
+          clearDropdownList();
         }}
         to={`/currencies/${item.name}`}
-        key={item.id}
       >
         <div>
           <img className="icon" alt="search-icon" src={item.image} />
