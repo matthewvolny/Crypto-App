@@ -27,6 +27,7 @@ export default function SearchBar() {
     console.log("form submitted");
     console.log(firstListItem.name);
     setSelectedCoinData(firstListItem);
+    setFirstListItem();
     navigate(`/currencies/${firstListItem.name}`);
     setValue("");
   };
@@ -45,6 +46,7 @@ export default function SearchBar() {
         <SearchList
           value={value}
           clearSearchBar={clearSearchBar}
+          firstListItem={firstListItem}
           setFirstListItem={setFirstListItem}
         />
       )}

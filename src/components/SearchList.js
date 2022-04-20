@@ -8,6 +8,7 @@ export default function SearchList({
   value,
   list,
   clearSearchBar,
+  firstListItem,
   setFirstListItem,
 }) {
   // console.log(value, list);
@@ -33,6 +34,9 @@ export default function SearchList({
         selectedCoinInfo.description = data.description.en;
         // console.log("selectedCoinInfo");
         // console.log(selectedCoinInfo);
+        if (firstListItem) {
+          setFirstListItem(selectedCoinInfo);
+        }
         setSelectedCoinDataWithDescription(selectedCoinInfo);
       });
   };
@@ -53,6 +57,15 @@ export default function SearchList({
       setFilteredList(filteredList);
     }
   }, [value]);
+
+  useEffect(() => {
+    if (filteredList.length !== 0) {
+      setFirstListItem(true);
+      console.log("filtered list first item");
+      console.log(filteredList[0]);
+      fetchCoinDescription(filteredList[0]);
+    }
+  }, [filteredList]);
 
   // const Dropdown = () => {
   //   //if user enters value in search bar
@@ -176,8 +189,8 @@ export default function SearchList({
             //makes first list item retrievable on form submit (click "enter" in searchBar component)
             //!area is a problem because it registers first item on all others in the list
             // if (index === 0) {
+            //   setFirstListItem(true);
             //   fetchCoinDescription(item);
-            //   setFirstListItem(selectedCoinDataWithDescription);
             // }
             if (allResultsVisibility) {
               return (
