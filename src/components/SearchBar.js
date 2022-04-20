@@ -21,6 +21,7 @@ export default function SearchBar() {
   };
 
   const navigate = useNavigate();
+
   const typedValueSearch = (e) => {
     e.preventDefault();
     console.log("form submitted");
@@ -39,14 +40,14 @@ export default function SearchBar() {
           type="text"
           placeholder="Search cryptocurrencies"
         />
-        {searchListVisibility && (
-          <SearchList
-            value={value}
-            clearSearchBar={clearSearchBar}
-            setFirstListItem={setFirstListItem}
-          />
-        )}
       </form>
+      {searchListVisibility && (
+        <SearchList
+          value={value}
+          clearSearchBar={clearSearchBar}
+          setFirstListItem={setFirstListItem}
+        />
+      )}
     </div>
   );
 }

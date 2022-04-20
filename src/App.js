@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Context from "./context/context";
+import Wallet from "./components/Wallet";
 import Coinlist from "./components/Coinlist";
 import Chart from "./components/Chart";
 import LoginAndSignUp from "./components/LoginAndSignUp";
@@ -259,7 +260,7 @@ function App() {
           <div className="middle-flex">
             <div className="chart-container">
               <Routes>
-                {/* <Route path="/" element={<SearchBar />} /> */}
+                <Route path="/" element={<Wallet />} />
                 <Route path="currencies/:id" element={<Chart />} />
                 {/* <Route path="/" element={<Coinlist coinData={coinData} />} /> */}
               </Routes>
